@@ -1,4 +1,4 @@
-PHPRouter is a simple routing extension for PHP inspired by express framework in Node.JS.
+PHPRouter is a simple routing extension for PHP inspired by express framework in Node.JS. Complex routing methods are still under development.
 
 <a name="install"></a>
 ## Installation
