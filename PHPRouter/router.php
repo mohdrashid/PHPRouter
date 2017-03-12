@@ -1,4 +1,11 @@
 <?php
+/*
+Name: PHPRouter,
+Author: Mohammed Rashid,
+Website: https://www.droidhat.com,
+Version: 1.0,
+Release Date: 12 March 2017
+*/
 class PHPRouter
 {
   public $method= null;
