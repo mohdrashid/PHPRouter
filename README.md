@@ -81,9 +81,8 @@ The callback function takes url parameters, body of the request and header of th
 <a name="error"></a>
 ### $app->error(function(Exception $e){})
 
-
 Error function takes a callback function as a parameter. The callback function will be passed exception information if any occurs.
--------------------------------------------------------
+  -------------------------------------------------------
 <a name="start"></a>
 ### $app->start();
 
