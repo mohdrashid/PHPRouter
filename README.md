@@ -70,7 +70,9 @@ $app->start();
 
 -------------------------------------------------------
 <a name="method"></a>
-### $app->method($path, function($request,$response){}); where method is get, post, put, delete or patch
+### Route Methods
+
+<b><code>$app->method($path, function($request,$response){});</code></b> where method is get, post, put, delete or patch
 
 The first parameter is the route path like '/' or '/user'.
 Second parameter is the callback function, i.e., the function to be called when processing is done.
