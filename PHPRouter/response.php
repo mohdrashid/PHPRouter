@@ -11,7 +11,7 @@ class Response
       if (isset($status)) {
           http_response_code($status);
       }
-      echo $data;
+      return print($data);
   }
   //Send as JSON
   public static function json($data, $status=null)
@@ -19,13 +19,15 @@ class Response
       if (isset($status)) {
           http_response_code($status);
       }
-      echo json_encode($data);
+      return print(json_encode($data));
   }
   //Send only status
   public static function status($status)
   {
       if (isset($status)) {
           http_response_code($status);
+          return 1;
       }
+      return 0;
   }
 }

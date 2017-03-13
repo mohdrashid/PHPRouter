@@ -19,20 +19,31 @@ class Router
   //Constructor
   public function __construct()
   {
-      $this->method = $_SERVER['REQUEST_METHOD'];
-      $this->response = new Response();
-      if (isset($_SERVER['PATH_INFO'])) {
-          $this->currentPath = $_SERVER['PATH_INFO'];
+      if (isset($_SERVER)) {
+          if (isset($_SERVER['REQUEST_METHOD'])) {
+              $this->method = $_SERVER['REQUEST_METHOD'];
+              $this->request["method"]=$_SERVER['REQUEST_METHOD'];
+          }
+          $this->request["header"]=$this->getHTTPHeaders();
+          if (isset($_SERVER['PATH_INFO'])) {
+              $this->currentPath = $_SERVER['PATH_INFO'];
+          }
       }
+      if(isset($_POST)){
+        $this->request["body"]=$_POST;
+        $this->request["raw"]=file_get_contents('php://input');
+      }
+      if(isset($_GET)){
+        $this->request["params"]=$_GET;
+      }
+      if(isset($_FILES)){
+        $this->request["files"]=$_FILES;
+      }
+      if(isset($_COOKIE)){
+        $this->request["cookies"]=$_COOKIE;
+      }
+      $this->response = new Response();
       $this->routes=['GET'=>[],'POST'=>[],'PUT'=>[],'DELETE'=>[],'PATCH'=>[],'ANY'=>[]];
-      $this->request=["body"=>$_POST,
-    "raw"=>file_get_contents('php://input'),
-    "header"=>$this->getHTTPHeaders(),
-    "method"=>$_SERVER['REQUEST_METHOD'],
-    "params"=>$_GET,
-    "files"=>$_FILES,
-    "cookies"=>$_COOKIE
-  ];
   }
 
 //Function to get headers related to HTTP,Authentication and REQUEST
@@ -129,6 +140,5 @@ private function Regex($path)
       if (isset($this->errorFunction)) {
           return ($this->errorFunction)(new Exception("Path not found!", 400), $this->response);
       }
-      $this->response.send("Error, Path not Found!", 404);
   }
 }

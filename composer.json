@@ -2,9 +2,8 @@
     "name": "mohdrashid/phprouter",
     "description": "An express inspired Routing library for PHP",
     "type": "library",
-    "require": {
-      "php": ">=5.3.0"
-    },
+    "require": {},
+    "require-dev" : { "phpunit/phpunit": "*" },
     "license": "MIT",
     "authors": [
         {
