@@ -4,27 +4,27 @@ include_once('PHPRouter/router.php');
 //Initalizing the PHPRouter class
 $app = new PHPRouter();
 //Routes
-$app->get('/', function($params,$body,$header){
-  echo "GET request";
+$app->get('/', function($request,$response){
+  $response->send("GET request");
 });
-$app->get('/user', function($params,$body,$header){
-  echo json_encode(array("id"=>"1","name"=>"droidhat.com"));
+$app->get('/user', function($request,$response){
+  $response->json(array("id"=>"1","name"=>"DroidHat","url"=>"http://www.droidhat.com"),200);
 });
-$app->post('/', function($params,$body,$header){
-  echo "POST request";
+$app->post('/', function($request,$response){
+  $response->send("POST request");
 });
-$app->put('/', function($params,$body,$header){
-  echo "PUT request";
+$app->put('/', function($request,$response){
+  $response->send("PUT request");
 });
-$app->patch('/', function($params,$body,$header){
-  echo "PATCH request";
+$app->patch('/', function($request,$response){
+  $response->send("PATCH request");
 });
-$app->delete('/', function($params,$body,$header){
-  echo "DELETE request";
+$app->delete('/', function($request,$response){
+  $response->send("DELETE request");
 });
 //Error Handler
-$app->error(function(Exception $e){
-  echo 'path not found';
+$app->error(function(Exception $e,$response){
+  $response->send('path not found',404);
 });
 //Starting the router
 $app->start();
