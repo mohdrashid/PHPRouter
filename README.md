@@ -18,7 +18,7 @@ A typical route looks initialization looks like:
 ```php
 //where method is get,post,put,delete or patch
 $app->method('/', function($request,$response){
-  echo "GET request";
+  $response->send("GET request");
 });
 ```
 
