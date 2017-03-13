@@ -1,6 +1,8 @@
 <?php namespace PHPRouter;
 
 require_once('response.php');
+use Exception;
+
 class Router
 {
     //Method of Request
