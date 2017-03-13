@@ -81,15 +81,20 @@ The callback function takes <a href="#request">request</a> array and <a href="#r
 ### Request Array
 
 Contains headers(HTTP information, Request information and PHP_AUTH) information, body parameter, url parameters, files and cookies informations in array format.
+
 <br>
 <b>Array indexes</b><br>
-"raw": Body in raw format<br>
-"body": Body in associative array format like $_POST<br>
-"header": HTTP,REQUEST and PHP_AUTH information<br>
-"method": The type of HTTP REQUEST<br>
-"params": URL parameters like $_GET<br>
-"files": FIles if any available like $_FILES<br>
-"cookies": Cookies if any available like $_COOKIE<br>
+<b>"raw"</b>: Body in raw format<br>
+<b>"body"</b>: Body in associative array format like $_POST<br>
+<b>"header"</b>: HTTP,REQUEST and PHP_AUTH information<br>
+<b>"method"</b>: The type of HTTP REQUEST<br>
+<b>"params"</b>: URL parameters like $_GET<br>
+<b>"files"</b>: FIles if any available like $_FILES<br>
+<b>"cookies"</b>: Cookies if any available like $_COOKIE<br>
+
+<b>Usage</b><br>
+$request["body"] to access body parameters
+
 
 -------------------------------------------------------
 <a name="response"></a>
@@ -102,6 +107,9 @@ response is an object of class Response. It has methods such as send, json and s
 1. <code><b>send($message,$status)</b></code>: $message is the message that you want to output to the requester and $status is an optional field in case you want to send status also.<br>
 2. <code><b>json($message,$status)</b></code>: $message is the message that you want to output to the requester and $status is an optional field in case you want to send status also. The difference is that here $message should be a PHP array that will be converted the function to JSON.<br>
 3. <code><b>status($status)</b></code>: send HTTP status only.
+
+<b>Usage</b><br>
+$response->send("Hello World",200); to output to the requester "hello" world with a status of <b>200</b><br>
 
 -------------------------------------------------------
 <a name="error"></a>
