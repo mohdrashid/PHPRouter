@@ -82,7 +82,7 @@ The callback function takes <a href="#request">request</a> array and <a href="#r
 
 Contains headers(HTTP information, Request information and PHP_AUTH) information, body parameter, url parameters, files and cookies informations in array format.
 <br>
-<b>Array indexes<b><br>
+<b>Array indexes</b><br>
 "raw": Body in raw format<br>
 "body": Body in associative array format like $_POST<br>
 "header": HTTP,REQUEST and PHP_AUTH information<br>
@@ -90,6 +90,7 @@ Contains headers(HTTP information, Request information and PHP_AUTH) information
 "params": URL parameters like $_GET<br>
 "files": FIles if any available like $_FILES<br>
 "cookies": Cookies if any available like $_COOKIE<br>
+
 -------------------------------------------------------
 <a name="response"></a>
 ### Response Object
@@ -97,7 +98,7 @@ Contains headers(HTTP information, Request information and PHP_AUTH) information
 response is an object of class Response. It has methods such as send, json and status.
 
 <br>
-<b>Fucntions<b><br>
+<b>Fucntions</b><br>
 1. <code><b>send($message,$status)</b></code>: $message is the message that you want to output to the requester and $status is an optional field in case you want to send status also.<br>
 2. <code><b>json($message,$status)</b></code>: $message is the message that you want to output to the requester and $status is an optional field in case you want to send status also. The difference is that here $message should be a PHP array that will be converted the function to JSON.<br>
 3. <code><b>status($status)</b></code>: send HTTP status only.
@@ -107,11 +108,13 @@ response is an object of class Response. It has methods such as send, json and s
 ### $app->error(function(Exception $e){})
 
 Error function takes a callback function as a parameter. The callback function will be passed exception information if any occurs.<br>
+
 ---------------------------------------------------------
 <a name="start"></a>
 ### $app->start();
 
 Start the routing process.<br>
+
 -------------------------------------------------------
 <a name="license"></a>
 ## License
