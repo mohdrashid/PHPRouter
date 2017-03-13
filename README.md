@@ -1,4 +1,4 @@
-PHPRouter is a simple routing extension for PHP inspired by express framework in Node.JS. Complex routing methods are still under development.
+PHPRouter is a simple routing extension for PHP inspired by express framework in Node.JS.
 
 <a name="install"></a>
 ## Installation
@@ -13,32 +13,52 @@ Include the router in the project like
 include_once('PHPRouter/router.php');
 ```
 
-PHP router supports <b>GET</b>, <b>POST</b>, <b>PUT</b>, <b>DELETE</b> and <b>PATCH</b> requests. The callback will returns url parameters, body and headers in order.
+PHP router supports <b>GET</b>, <b>POST</b>, <b>PUT</b>, <b>DELETE</b>, <b>PATCH</b> and <b>ANY</b>requests. Function <b>any</b> can be used to capture all events. The callback will return request parameters and response object in order.
+
 A typical route looks initialization looks like:
 ```php
-//where method is get,post,put,delete or patch
+//where method is get,post,put,delete, patch or any
 $app->method('/', function($request,$response){
   $response->send("GET request");
 });
 ```
 
+Support for complex routes using regex
+```php
+//where method is get,post,put,delete or patch
+$app->method('/:id', function($request,$response){
+  $response->send("GET request");
+});
+```
+Here the id will be returned as name-value pair in request array's "params" field.
+
+-------------------------------------------------------------------
 <a name="example"></a>
 ## Example
 
 ```php
 <?php
-//Including the library
-include_once('PHPRouter/router.php');
+require_once('../PHPRouter/router.php');
 //Initalizing the PHPRouter class
-$app = new PHPRouter();
-$app->get('/', function($request,$response){
-  $response->send("GET request");
+$app = new PHPRouter\Router();
+/*****
+Routes
+******/
+//All HTTP request for /employee will come here
+$app->any('/employee', function($request,$response){
+  $response->send("ANY request");
 });
+//All GET request for /user will come here
 $app->get('/user', function($request,$response){
-  $response->json(array("id"=>"1","name"=>"droidhat.com"),200);
+  $response->json(["id"=>"1","name"=>"DroidHat","url"=>"http://www.droidhat.com"],200);
 });
-$app->post('/', function($request,$response){
-  $response->send("POST request");
+//All POST request for /:id will come here; where id is any alphanumeral
+$app->post('/:id', function($request,$response){
+  $response->json(["id"=>($request["params"]["id"])],200);
+});
+//All POST request for /:id/:name will come here; where id and name are any alphanumeral
+$app->post('/:id/:name', function($request,$response){
+  $response->json(["id"=>($request["params"]["id"]),"name"=>($request["params"]["name"])],200);
 });
 $app->put('/', function($request,$response){
   $response->send("PUT request");
@@ -65,6 +85,7 @@ $app->start();
   * <a href="#method"><code>$app-><b>put()</b></code></a>
   * <a href="#method"><code>$app-><b>delete()</b></code></a>
   * <a href="#method"><code>$app-><b>patch()</b></code></a>
+  * <a href="#method"><code>$app-><b>any()</b></code></a>
   * <a href="#error"><code>$app-><b>error()</b></code></a>
   * <a href="#start"><code>$app-><b>start()</b></code></a>
 
@@ -72,7 +93,7 @@ $app->start();
 <a name="method"></a>
 ### Route Methods
 
-<b><code>$app->method($path, function($request,$response){});</code></b> where method is get, post, put, delete or patch
+<b><code>$app->method($path, function($request,$response){});</code></b> where method is get, post, put, delete, patch or any. any supports all methods.
 
 The first parameter is the route path like '/' or '/user'.
 Second parameter is the callback function, i.e., the function to be called when processing is done.
@@ -115,13 +136,17 @@ $response->send("Hello World",200); to output to the requester "hello" world wit
 
 -------------------------------------------------------
 <a name="error"></a>
-### $app->error(function(Exception $e){})
+### Error
+
+$app->error(function(Exception $e){})
 
 Error function takes a callback function as a parameter. The callback function will be passed exception information if any occurs.<br>
 
 ---------------------------------------------------------
 <a name="start"></a>
-### $app->start();
+### Start Routing
+
+$app->start();
 
 Start the routing process.<br>
 

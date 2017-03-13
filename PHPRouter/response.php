@@ -1,14 +1,4 @@
-<?php
-/*
-{
-"Name": "PHPRouter",
-"Author": "Mohammed Rashid",
-"Website": "https://www.droidhat.com",
-"Version": "1.1",
-"Release Date": "12 March 2017",
-"Last Update": "13 March 2017"
-}
-*/
+<?php namespace PHPRouter;
 class Response
 {
   public function __construct() {
