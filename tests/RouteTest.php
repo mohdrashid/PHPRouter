@@ -1,6 +1,9 @@
-<?php
+<?php namespace Tests;
+
 //Including the library
-require_once('../PHPRouter/router.php');
+require '..\PHPRouter\Router.php';
+use PHPRouter\Router;
+use Exception;
 class RouteTest extends \PHPUnit_Framework_TestCase
 {
      public function testRouteAny()
@@ -13,7 +16,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
                 ];
 
        //Initalizing the PHPRouter class
-       $app = new PHPRouter\Router();
+       $app = new Router();
        //Defining Routes
        $app->any('/test', function ($request, $response) {
            return $response->send("ANY request");
@@ -31,11 +34,12 @@ class RouteTest extends \PHPUnit_Framework_TestCase
                 ];
 
        //Initalizing the PHPRouter class
-       $app = new PHPRouter\Router();
+       $app = new Router();
        //Defining Routes
        $app->any('/test2/:id', function ($request, $response) {
          $this->assertEquals(123, $request["params"]["id"]);
-         return $response->json(["id"=>$request["params"]["id"]]);
+         $status = $response->json(["id"=>$request["params"]["id"]]);
+         $this->assertEquals(1, $status);
        });
        $app->start();
      }
@@ -50,7 +54,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
                 ];
       $_POST["id"]=123;
        //Initalizing the PHPRouter class
-       $app = new PHPRouter\Router();
+       $app = new Router();
        //Defining Routes
        $app->post('/test', function ($request, $response) {
          $this->assertEquals(123, $request["body"]["id"]);
@@ -69,15 +73,15 @@ class RouteTest extends \PHPUnit_Framework_TestCase
                 ];
 
        //Initalizing the PHPRouter class
-       $app = new PHPRouter\Router();
+       $app = new Router();
        //Defining Routes
        $app->any('/employee', function ($request, $response) {
          return $response->send("ANY request");
        });
        $app->error(function (Exception $e, $response) {
-         return $response->send("Error",404);
+         $this->assertEquals(404, $e->getCode());
        });
-       $this->assertEquals(1, $app->start());
-     }
+       $app->start();
 
+     }
 }

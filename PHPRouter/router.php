@@ -207,7 +207,7 @@ private function getRegexRepresentation($path)
           return $callback($this->request, $this->response);
       }
       if (isset($this->errorFunction)) {
-          return ($this->errorFunction)(new Exception("Path not found!", 400), $this->response);
+          return ($this->errorFunction)(new Exception("Path not found!", 404), $this->response);
       }
   }
 }
