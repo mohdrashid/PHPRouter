@@ -1,8 +1,10 @@
 <?php
   //Including the library
-  require_once('../PHPRouter/router.php');
+  require_once "..\PHPRouter\Router.php";
+
+  use PHPRouter\Router;
   //Initalizing the PHPRouter class
-  $app = new PHPRouter\Router();
+  $app = new Router();
   /*****
   Routes
   ******/

@@ -1,6 +1,8 @@
 <?php namespace PHPRouter;
 
-require_once('response.php');
+require_once "Response.php";
+
+use PHPRouter\Response;
 use Exception;
 
 class Router
