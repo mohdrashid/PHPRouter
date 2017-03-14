@@ -11,12 +11,19 @@ class Router
   private $routes= [];
   //Callback error function
   private $errorFunction=null;
-    private $request = null;
-    private $currentPath=null;
-    private $response=null;
-    private $CharsAllowed = '[a-zA-Z0-9\_\-]+';
+  //Request Array to store Request related information
+  private $request = null;
+  //Current Request PATH
+  private $currentPath=null;
+  //Object of class Response
+  private $response=null;
+  //Regex Allowed Characters
+  private $CharsAllowed = '[a-zA-Z0-9\_\-]+';
 
-  //Constructor
+  /**
+   * Default Constructor: Initalizing all variables
+   * @method __construct
+   */
   public function __construct()
   {
       if (isset($_SERVER)) {
@@ -29,24 +36,28 @@ class Router
               $this->currentPath = $_SERVER['PATH_INFO'];
           }
       }
-      if(isset($_POST)){
-        $this->request["body"]=$_POST;
-        $this->request["raw"]=file_get_contents('php://input');
+      if (isset($_POST)) {
+          $this->request["body"]=$_POST;
+          $this->request["raw"]=file_get_contents('php://input');
       }
-      if(isset($_GET)){
-        $this->request["params"]=$_GET;
+      if (isset($_GET)) {
+          $this->request["params"]=$_GET;
       }
-      if(isset($_FILES)){
-        $this->request["files"]=$_FILES;
+      if (isset($_FILES)) {
+          $this->request["files"]=$_FILES;
       }
-      if(isset($_COOKIE)){
-        $this->request["cookies"]=$_COOKIE;
+      if (isset($_COOKIE)) {
+          $this->request["cookies"]=$_COOKIE;
       }
       $this->response = new Response();
       $this->routes=['GET'=>[],'POST'=>[],'PUT'=>[],'DELETE'=>[],'PATCH'=>[],'ANY'=>[]];
   }
 
-//Function to get headers related to HTTP,Authentication and REQUEST
+/**
+ * Function to get headers related to HTTP,PHP_AUTH and REQUEST from $_SERVER
+ * @method getHTTPHeaders
+ * @return Array         returns an containing all information related to HTTP,PHP_AUTH and REQUEST from $_SERVER
+ */
 private function getHTTPHeaders()
 {
     $header = [];
@@ -57,8 +68,14 @@ private function getHTTPHeaders()
     }
     return $header;
 }
-//Regex Checker
-private function Regex($path)
+
+/**
+ * Turns given path into regular expression for comparison in complex routing
+ * @method getRegexRepresentation
+ * @param  string                 $path Route
+ * @return string                       Turns route into a regex
+ */
+private function getRegexRepresentation($path)
 {
     //Check for invalid pattern
   if (preg_match('/[^-:\/_{}()a-zA-Z\d]/', $path)) {
@@ -74,43 +91,89 @@ private function Regex($path)
     return $patternAsRegex;
 }
 
-  //Register get requests
+  /**
+   * Add the given route to 'GET' array for lookup
+   * @method get
+   * @param  string   $path     Route
+   * @param  function $callback Function to be called when the current equates the provided route; The callback must take request array and response object as parameters
+   * @return void
+   */
   public function get($path, $callback)
   {
-      $this->routes['GET'][$this->Regex($path)]=$callback;
+      $this->routes['GET'][$this->getRegexRepresentation($path)]=$callback;
   }
-  //Register post requests
+  /**
+   * Add the given route to 'POST' array for lookup
+   * @method post
+   * @param  string   $path     Route
+   * @param  function $callback Function to be called when the current equates the provided route; The callback must take request array and response object as parameters
+   * @return void
+   */
   public function post($path, $callback)
   {
-      $this->routes['POST'][$this->Regex($path)]=$callback;
+      $this->routes['POST'][$this->getRegexRepresentation($path)]=$callback;
   }
-  //Register put requests
+  /**
+   * Add the given route to 'PUT' array for lookup
+   * @method put
+   * @param  string   $path     Route
+   * @param  function $callback Function to be called when the current equates the provided route; The callback must take request array and response object as parameters
+   * @return void
+   */
   public function put($path, $callback)
   {
-      $this->routes['PUT'][$this->Regex($path)]=$callback;
+      $this->routes['PUT'][$this->getRegexRepresentation($path)]=$callback;
   }
-  //Register put requests
+  /**
+   * Add the given route to 'PATCH' array for lookup
+   * @method patch
+   * @param  string   $path     Route
+   * @param  function $callback Function to be called when the current equates the provided route; The callback must take request array and response object as parameters
+   * @return void
+   */
   public function patch($path, $callback)
   {
-      $this->routes['PATCH'][$this->Regex($path)]=$callback;
+      $this->routes['PATCH'][$this->getRegexRepresentation($path)]=$callback;
   }
-  //Register delete requests
+  /**
+   * Add the given route to 'DELETE' array for lookup
+   * @method delete
+   * @param  string   $path     Route
+   * @param  function $callback Function to be called when the current equates the provided route; The callback must take request array and response object as parameters
+   * @return void
+   */
   public function delete($path, $callback)
   {
-      $this->routes['DELETE'][$this->Regex($path)]=$callback;
+      $this->routes['DELETE'][$this->getRegexRepresentation($path)]=$callback;
   }
-  //Register any requests
+  /**
+   * Add the given route to 'ANY' array for lookup. ANY can be any REQUEST_METHOD
+   * @method any
+   * @param  string   $path     Route
+   * @param  function $callback Function to be called when the current equates the provided route; The callback must take request array and response object as parameters
+   * @return void
+   */
   public function any($path, $callback)
   {
-      $this->routes['ANY'][$this->Regex($path)]=$callback;
+      $this->routes['ANY'][$this->getRegexRepresentation($path)]=$callback;
   }
-  //Error Handling
+  /**
+   * Error Handler to set handler to be called when no routes are found
+   * @method error
+   * @param  function $function A callback function that takes request array and response object
+   * @return void
+   */
   public function error($function)
   {
       $this->errorFunction=$function;
   }
-  //Function to get appropriate callback for the route
-  public function getCallBack($method)
+  /**
+   * Function to get appropriate callback for the current PATH_INFO based on REQUEST_METHOD
+   * @method getCallback
+   * @param  string        $method REQUEST_METHOD as string
+   * @return function              The callback function
+   */
+  public function getCallback($method)
   {
       if (!isset($this->routes[$method])) {
           return null;
@@ -126,7 +189,11 @@ private function Regex($path)
           }
       }
   }
-  //Start router
+  /**
+   * Starts the routing process by matching current PATH_INFO to avaialable routes in array $routes
+   * @method start
+   * @return function  Returns callback function of the appropriate route or returns callback function of the error handler
+   */
   public function start()
   {
       $callback=$this->getCallBack('ANY');
